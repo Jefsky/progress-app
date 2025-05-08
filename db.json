@@ -1,0 +1,35 @@
+{
+  "projects": [
+    {
+      "id": "1746724190204",
+      "name": "123",
+      "description": "123",
+      "startDate": "2025-05-08",
+      "endDate": "2025-08-08",
+      "status": "未开始",
+      "progress": 0,
+      "manager": "",
+      "members": [
+        "123123123"
+      ],
+      "tasks": []
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "张三",
+      "email": "zhangsan@example.com"
+    },
+    {
+      "id": "2",
+      "name": "李四",
+      "email": "lisi@example.com"
+    },
+    {
+      "id": "3",
+      "name": "王五",
+      "email": "wangwu@example.com"
+    }
+  ]
+}
