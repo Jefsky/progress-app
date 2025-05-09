@@ -8,7 +8,26 @@
 2. 确保您的计算机在局域网中有一个固定的 IP 地址
 3. 确保局域网中的防火墙允许 3000 端口（API 服务器）和 8080 端口（Web 服务器）的访问
 
-## 部署步骤
+## 快速部署方法（推荐）
+
+我们提供了一个简单的一键部署脚本，可以自动完成所有部署步骤：
+
+1. 双击运行 `启动局域网服务.bat` 文件
+2. 脚本会自动执行以下操作：
+   - 安装依赖
+   - 创建 db.json 文件（如果不存在）
+   - 构建前端应用
+   - 自动检测您的 IP 地址并更新配置
+   - 启动 API 服务器和前端应用服务器
+   - 在浏览器中打开应用
+
+3. 部署完成后，您可以通过以下地址访问应用：
+   - 本地访问：http://localhost:8080
+   - 局域网访问：http://[您的IP地址]:8080
+
+## 手动部署步骤
+
+如果您需要更多控制或自动部署脚本无法正常工作，可以按照以下步骤手动部署：
 
 ### 1. 配置服务器 IP 地址
 
@@ -16,7 +35,7 @@
 
 ```javascript
 const LAN_CONFIG = {
-  API_URL: 'http://192.168.1.100:3000' // 替换为您的实际 IP 地址
+  API_URL: 'http://192.168.110.57:3000' // 替换为您的实际 IP 地址
 };
 ```
 
@@ -132,6 +151,20 @@ npm run start:lan
    - 修改 server.js 中的 port 变量
    - 修改 static-server.js 中的 port 变量
    - 更新 src/config.js 中的 API_URL 以匹配新端口
+
+### 部署脚本无法运行
+
+如果 PowerShell 脚本无法运行，可能是由于执行策略限制。尝试以下解决方案：
+
+1. 以管理员身份打开 PowerShell，然后运行：
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
+   ```
+
+2. 或者直接在命令行中运行：
+   ```bash
+   powershell -ExecutionPolicy Bypass -File deploy-lan.ps1
+   ```
 
 ## 注意事项
 
