@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style>
+/* 全局变量 */
 :root {
   --primary-color: #409eff;
   --success-color: #67c23a;
@@ -28,6 +29,7 @@ export default {
   --transition-duration: 0.3s;
 }
 
+/* 基础样式 */
 html, body {
   margin: 0;
   padding: 0;
@@ -47,7 +49,7 @@ html, body {
   background-color: var(--background-color);
 }
 
-/* 全局卡片样式 */
+/* 卡片样式 */
 .el-card {
   border: none !important;
   border-radius: 8px !important;
@@ -65,52 +67,73 @@ html, body {
   padding: 20px !important;
 }
 
-/* 全局按钮样式 */
+/* 按钮样式 */
 .el-button {
   border-radius: 4px !important;
-  font-weight: 500 !important;
-  transition: all 0.25s ease !important;
+  transition: all var(--transition-duration) ease !important;
 }
 
-.el-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.el-button--primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
-/* 全局表单样式 */
-.el-form-item__label {
-  font-weight: 500 !important;
-  color: var(--text-primary) !important;
+.el-button--success {
+  background-color: var(--success-color) !important;
+  border-color: var(--success-color) !important;
 }
 
-.el-input__inner, .el-textarea__inner {
-  border-radius: 4px !important;
+.el-button--warning {
+  background-color: var(--warning-color) !important;
+  border-color: var(--warning-color) !important;
 }
 
-/* 全局标签样式 */
-.el-tag {
-  border-radius: 4px !important;
-  padding: 0 8px !important;
+.el-button--danger {
+  background-color: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
 }
 
-/* 全局进度条样式 */
-.el-progress-bar__outer {
-  border-radius: 4px !important;
-  background-color: #ebeef5 !important;
+/* 表格样式 */
+.el-table {
+  border-radius: 8px !important;
+  overflow: hidden;
 }
 
-.el-progress-bar__inner {
-  border-radius: 4px !important;
+.el-table th {
+  background-color: #f5f7fa !important;
+  color: var(--text-regular) !important;
+  font-weight: 600 !important;
 }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-  html, body {
-    font-size: 13px;
-  }
-  
-  .el-card__body {
-    padding: 16px !important;
-  }
+/* 项目卡片样式 */
+.project-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 项目进度样式 */
+.progress-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.progress-status.low {
+  background-color: #f56c6c;
+}
+
+.progress-status.medium {
+  background-color: #e6a23c;
+}
+
+.progress-status.high {
+  background-color: #67c23a;
 }
 </style>

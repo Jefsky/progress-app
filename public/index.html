@@ -1,15 +1,38 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- 引入 Element Plus 的 CDN 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.9.9/dist/index.css">
+    <style>
+      /* 基础样式 */
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #303133;
+      }
+      
+      #app {
+        font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #303133;
+        min-height: 100vh;
+        background-color: #f5f7fa;
+      }
+    </style>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>很抱歉，<%= htmlWebpackPlugin.options.title %> 需要启用 JavaScript 才能正常工作。请启用它以继续使用。</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

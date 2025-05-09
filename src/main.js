@@ -32,7 +32,9 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 // 使用插件
-app.use(ElementPlus)
+app.use(ElementPlus, {
+  size: 'default'
+})
 app.use(router)
 
 // 挂载应用

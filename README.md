@@ -71,6 +71,29 @@ npm run lint
 
 [局域网部署指南](./LAN_DEPLOYMENT.md)
 
+### 带样式修复的局域网部署
+
+如果在局域网部署时遇到样式丢失问题，可以使用带样式修复的部署方法：
+
+```bash
+# Windows 系统
+.\启动项目（带样式修复）.bat
+
+# 或者使用 PowerShell
+.\启动项目（带样式修复）.ps1
+
+# 或者直接使用 Node.js
+node deploy-with-style-fix.js
+```
+
+详细的样式修复指南请参考：
+
+[样式修复指南](./STYLE_FIX_GUIDE.md)
+
+## 样式修复
+
+如果您在使用过程中遇到样式丢失问题，请参考 [样式修复指南](./STYLE_FIX_GUIDE.md)。
+
 ## 项目结构
 
 ```
@@ -85,6 +108,7 @@ npm run lint
 │   └── main.js             # 入口文件
 ├── db.json.example         # 数据库示例文件
 ├── server.js               # 服务器配置
+├── deploy-with-style-fix.js # 带样式修复的部署脚本
 └── package.json            # 项目配置
 ```
 
@@ -95,6 +119,14 @@ npm run lint
 3. 在项目详情页可以添加、编辑、删除任务
 4. 可以设置任务的负责人、参与者、进度等信息
 5. 项目进度会根据任务完成情况自动计算
+
+## 样式问题解决方案
+
+如果遇到样式丢失问题，可以尝试以下解决方案：
+
+1. 使用带样式修复的部署脚本（推荐）
+2. 直接访问集成应用版本：http://localhost:8085
+3. 参考 [样式修复指南](./STYLE_FIX_GUIDE.md) 中的永久解决方案
 
 ## 贡献指南
 
