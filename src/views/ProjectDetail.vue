@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="project-detail-container">
     <!-- 项目头部信息 -->
     <el-card class="page-header">
@@ -29,13 +29,29 @@
           </el-tag>
           <span v-if="!project?.members || project.members.length === 0">暂无参与人</span>
         </p>
-        <p>
-          <strong>项目进度:</strong>
+        <div class="progress-wrapper">
+          <div class="progress-header">
+            <strong>项目进度:</strong>
+            <span class="progress-percentage" :class="getProgressColorClass(project?.progress || 0)">
+              {{ project?.progress || 0 }}%
+            </span>
+          </div>
           <el-progress 
             :percentage="project?.progress || 0" 
             :status="getProgressStatus(project?.progress || 0)"
+            :stroke-width="12"
+            :show-text="false"
+            class="custom-progress"
           ></el-progress>
-        </p>
+          <div class="progress-info">
+            <span class="progress-label" :class="getProgressLabelClass(project?.progress || 0)">
+              {{ getProgressLabel(project?.progress || 0) }}
+            </span>
+            <span class="progress-date" v-if="project?.endDate">
+              截止日期: {{ formatDate(project?.endDate) }}
+            </span>
+          </div>
+        </div>
       </div>
     </el-card>
     
@@ -117,12 +133,20 @@
             <span v-else class="text-muted">无</span>
           </template>
         </el-table-column>
-        <el-table-column label="进度" width="150">
+        <el-table-column label="进度" width="200">
           <template #default="scope">
-            <el-progress 
-              :percentage="scope.row.progress" 
-              :status="getProgressStatus(scope.row.progress)"
-            ></el-progress>
+            <div class="task-progress-wrapper">
+              <el-progress 
+                :percentage="scope.row.progress" 
+                :status="getProgressStatus(scope.row.progress)"
+                :stroke-width="8"
+                :show-text="false"
+                class="task-progress"
+              ></el-progress>
+              <span class="task-progress-text" :class="getProgressColorClass(scope.row.progress)">
+                {{ scope.row.progress }}%
+              </span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="截止日期" width="100">
@@ -964,8 +988,9 @@ export default {
     // 获取进度状态
     const getProgressStatus = (progress) => {
       if (progress >= 100) return 'success';
-      if (progress >= 50) return 'warning';
-      return '';
+      if (progress >= 70) return 'warning';
+      if (progress >= 30) return '';
+      return 'exception';
     };
 
     // 获取优先级类型
@@ -982,6 +1007,30 @@ export default {
         default:
           return 'info';
       }
+    };
+
+    // 获取进度标签
+    const getProgressLabel = (progress) => {
+      if (progress >= 100) return '已完成';
+      if (progress >= 70) return '进展顺利';
+      if (progress >= 30) return '进行中';
+      return '需要加速';
+    };
+
+    // 获取进度颜色类名
+    const getProgressColorClass = (progress) => {
+      if (progress >= 100) return 'text-success';
+      if (progress >= 70) return 'text-warning';
+      if (progress >= 30) return 'text-primary';
+      return 'text-danger';
+    };
+
+    // 获取进度标签类名
+    const getProgressLabelClass = (progress) => {
+      if (progress >= 100) return 'label-success';
+      if (progress >= 70) return 'label-warning';
+      if (progress >= 30) return 'label-primary';
+      return 'label-danger';
     };
 
     // 监听路由参数变化
@@ -1043,7 +1092,10 @@ export default {
       formatDate,
       getStatusType,
       getProgressStatus,
-      getPriorityType
+      getPriorityType,
+      getProgressLabel,
+      getProgressColorClass,
+      getProgressLabelClass
     };
   }
 };
@@ -1112,6 +1164,97 @@ export default {
   margin-right: 8px;
 }
 
+.progress-wrapper {
+  grid-column: 1 / -1;
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.progress-wrapper:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-header strong {
+  font-size: 16px;
+  color: #303133;
+}
+
+.progress-percentage {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.custom-progress {
+  margin: 8px 0;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.progress-label {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.progress-date {
+  color: #909399;
+  font-size: 12px;
+}
+
+.text-success {
+  color: #67c23a;
+}
+
+.text-warning {
+  color: #e6a23c;
+}
+
+.text-primary {
+  color: #409eff;
+}
+
+.text-danger {
+  color: #f56c6c;
+}
+
+.label-success {
+  background-color: rgba(103, 194, 58, 0.1);
+  color: #67c23a;
+}
+
+.label-warning {
+  background-color: rgba(230, 162, 60, 0.1);
+  color: #e6a23c;
+}
+
+.label-primary {
+  background-color: rgba(64, 158, 255, 0.1);
+  color: #409eff;
+}
+
+.label-danger {
+  background-color: rgba(245, 108, 108, 0.1);
+  color: #f56c6c;
+}
+
 .member-tag {
   margin-right: 5px;
   margin-bottom: 5px;
@@ -1153,6 +1296,21 @@ export default {
 
 .filter-select {
   width: 130px;
+}
+
+.task-progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-progress {
+  flex: 1;
+}
+
+.task-progress-text {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
