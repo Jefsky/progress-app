@@ -39,7 +39,7 @@
           <el-progress 
             :percentage="project?.progress || 0" 
             :status="getProgressStatus(project?.progress || 0)"
-            :stroke-width="12"
+            :stroke-width="10"
             :show-text="false"
             class="custom-progress"
           ></el-progress>
@@ -139,7 +139,7 @@
               <el-progress 
                 :percentage="scope.row.progress" 
                 :status="getProgressStatus(scope.row.progress)"
-                :stroke-width="8"
+                :stroke-width="6"
                 :show-text="false"
                 class="task-progress"
               ></el-progress>
@@ -1166,51 +1166,51 @@ export default {
 
 .progress-wrapper {
   grid-column: 1 / -1;
-  margin: 16px 0;
-  padding: 16px;
+  margin: 12px 0;
+  padding: 12px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
 .progress-wrapper:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .progress-header strong {
-  font-size: 16px;
+  font-size: 14px;
   color: #303133;
 }
 
 .progress-percentage {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .custom-progress {
-  margin: 8px 0;
+  margin: 6px 0;
 }
 
 .progress-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
-  font-size: 13px;
+  margin-top: 6px;
+  font-size: 12px;
 }
 
 .progress-label {
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
   font-weight: 500;
 }
 
@@ -1301,7 +1301,7 @@ export default {
 .task-progress-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .task-progress {
@@ -1309,7 +1309,7 @@ export default {
 }
 
 .task-progress-text {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 }
 
