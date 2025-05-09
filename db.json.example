@@ -1,4 +1,30 @@
 {
-  "projects": [],
+  "projects": [
+    {
+      "id": "example-project-1",
+      "name": "示例项目 1",
+      "description": "这是一个示例项目，用于展示项目结构",
+      "startDate": "2025-01-01",
+      "endDate": "2025-12-31",
+      "manager": "项目经理",
+      "members": ["成员1", "成员2"],
+      "status": "进行中",
+      "progress": 50,
+      "tasks": [
+        {
+          "id": "example-task-1",
+          "name": "示例任务 1",
+          "description": "这是一个示例任务",
+          "assignee": "成员1",
+          "participants": ["成员1", "成员2"],
+          "startDate": "2025-01-15",
+          "endDate": "2025-02-15",
+          "progress": 75,
+          "status": "进行中",
+          "priority": "中"
+        }
+      ]
+    }
+  ],
   "tasks": []
 }
