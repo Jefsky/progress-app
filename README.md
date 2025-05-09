@@ -27,6 +27,14 @@
 npm install
 ```
 
+### 准备数据库文件
+
+首次使用时，需要创建 db.json 文件。可以复制 db.json.example 作为起点：
+
+```bash
+cp db.json.example db.json
+```
+
 ### 启动后端服务
 
 ```bash
@@ -63,7 +71,7 @@ npm run lint
 │   ├── views/              # 页面视图
 │   ├── App.vue             # 主组件
 │   └── main.js             # 入口文件
-├── db.json                 # 数据库文件
+├── db.json.example         # 数据库示例文件
 ├── server.js               # 服务器配置
 └── package.json            # 项目配置
 ```
@@ -79,3 +87,8 @@ npm run lint
 ## 贡献指南
 
 欢迎提交 Issue 或 Pull Request 来改进这个项目。
+
+## 注意事项
+
+- db.json 文件包含个人数据，不应该提交到代码仓库中
+- 请使用 db.json.example 作为示例，创建自己的 db.json 文件

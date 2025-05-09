@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="project-detail-container">
     <!-- 项目头部信息 -->
     <el-card class="page-header">
@@ -136,16 +136,18 @@
               size="small" 
               @click="editTask(scope.row)"
               type="primary" 
-              :icon="Edit"
               circle
-            ></el-button>
+            >
+              <el-icon><Edit /></el-icon>
+            </el-button>
             <el-button 
               size="small" 
               @click="deleteTask(scope.row)"
               type="danger" 
-              :icon="Delete"
               circle
-            ></el-button>
+            >
+              <el-icon><Delete /></el-icon>
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -396,6 +398,17 @@
           format="YYYY-MM-DD"
           value-format="YYYY-MM-DD"
         ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="项目状态">
+        <el-select v-model="editingProject.status" placeholder="请选择项目状态">
+          <el-option label="未开始" value="未开始"></el-option>
+          <el-option label="进行中" value="进行中"></el-option>
+          <el-option label="已完成" value="已完成"></el-option>
+          <el-option label="已延期" value="已延期"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="项目进度">
+        <el-slider v-model="editingProject.progress" :step="5" :max="100" show-input></el-slider>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -789,7 +802,9 @@ export default {
         startDate: editingProject.value.startDate,
         endDate: editingProject.value.endDate,
         manager: editingProject.value.manager,
-        members: editingProject.value.members ? [...editingProject.value.members] : []
+        members: editingProject.value.members ? [...editingProject.value.members] : [],
+        status: editingProject.value.status,
+        progress: editingProject.value.progress
       });
       
       try {
@@ -1033,79 +1048,111 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 .project-detail-container {
   padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
 }
 
 .page-header {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  transition: all 0.3s ease;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
 .header-left h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 24px;
+  color: #303133;
+  font-weight: 600;
 }
 
 .action-buttons {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .project-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-top: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+  color: #606266;
 }
 
 .project-info p {
-  margin: 0;
+  margin: 8px 0;
+  display: flex;
+  align-items: flex-start;
 }
 
-.chart-card {
-  margin-bottom: 20px;
+.project-info p strong {
+  display: inline-block;
+  min-width: 100px;
+  color: #303133;
+  margin-right: 8px;
+}
+
+.member-tag {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.chart-card, .task-list {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  transition: all 0.3s ease;
 }
 
 .chart-container {
   height: 300px;
+  padding: 16px;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .card-header h2 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 18px;
+  font-weight: 600;
+  color: #303133;
 }
 
 .filter-controls {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  align-items: center;
 }
 
 .filter-select {
-  width: 120px;
-}
-
-.task-list {
-  margin-bottom: 20px;
+  width: 130px;
 }
 
 @media (max-width: 768px) {
@@ -1116,41 +1163,20 @@ export default {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 16px;
   }
   
   .action-buttons {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
   
-  .member-tag {
-    margin-right: 6px;
-    margin-bottom: 6px;
-  }
-  
-  .member-input {
-    width: 120px;
-    margin-right: 6px;
-    vertical-align: bottom;
-  }
-  
-  .button-new-member {
-    margin-bottom: 6px;
-  }
-  
-  .participant-item {
-    padding: 5px 0;
-    border-bottom: 1px dashed #eee;
-  }
-  
-  .participant-item:last-child {
-    border-bottom: none;
-  }
-  
-  .text-muted {
-    color: #909399;
-    font-size: 0.9em;
+  .filter-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 8px;
   }
 }
 </style>
