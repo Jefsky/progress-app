@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目进度管理系统 - 局域网部署</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #409EFF;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #67C23A;
+            margin-top: 30px;
+        }
+        .card {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #409EFF;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 10px 0;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #66b1ff;
+        }
+        .btn-success {
+            background-color: #67C23A;
+        }
+        .btn-success:hover {
+            background-color: #85ce61;
+        }
+        .btn-warning {
+            background-color: #E6A23C;
+        }
+        .btn-warning:hover {
+            background-color: #ebb563;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .step:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #67C23A;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+        }
+        .note {
+            background-color: #fdf6ec;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #E6A23C;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>项目进度管理系统 - 局域网部署</h1>
+    
+    <div class="card">
+        <h2>快速部署指南</h2>
+        <p>按照以下步骤在局域网中部署项目进度管理系统：</p>
+        
+        <div class="step">打开命令提示符或 PowerShell</div>
+        <div class="step">进入项目目录: <code>cd d:\hello\progress-app</code></div>
+        <div class="step">安装依赖: <code>npm install</code></div>
+        <div class="step">构建前端应用: <code>npm run build:lan</code></div>
+        <div class="step">启动 API 服务器: <code>npm run server</code> (新窗口)</div>
+        <div class="step">启动前端服务器: <code>npm run serve:static</code> (新窗口)</div>
+        
+        <div class="note">
+            注意: 确保您的防火墙允许 3000 和 8080 端口的访问，以便其他设备可以连接到您的服务器。
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>服务器地址</h2>
+        <p>部署完成后，您可以通过以下地址访问应用：</p>
+        
+        <h3>本地访问</h3>
+        <p>前端应用: <a href="http://localhost:8080" target="_blank">http://localhost:8080</a></p>
+        <p>API 服务器: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+        
+        <h3>局域网访问</h3>
+        <p>前端应用: <code>http://[您的IP地址]:8080</code></p>
+        <p>API 服务器: <code>http://[您的IP地址]:3000</code></p>
+        
+        <div id="ip-address">正在检测您的 IP 地址...</div>
+        
+        <button class="btn" onclick="detectIP()">检测 IP 地址</button>
+    </div>
+    
+    <div class="card">
+        <h2>快速启动</h2>
+        <p>使用以下按钮快速启动服务器：</p>
+        
+        <button class="btn btn-success" onclick="startServer()">启动 API 服务器</button>
+        <button class="btn btn-success" onclick="startStaticServer()">启动前端服务器</button>
+        <button class="btn btn-warning" onclick="stopServers()">停止所有服务器</button>
+    </div>
+    
+    <div class="card">
+        <h2>配置</h2>
+        <p>如果您需要修改配置，请编辑以下文件：</p>
+        <p><code>src/config.js</code> - 修改 API 服务器地址</p>
+        <p><code>server.js</code> - 修改 API 服务器端口</p>
+        <p><code>static-server.js</code> - 修改前端服务器端口</p>
+    </div>
+    
+    <script>
+        function detectIP() {
+            const ipElement = document.getElementById('ip-address');
+            ipElement.textContent = '正在检测 IP 地址...';
+            
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    ipElement.innerHTML = `
+                        <p>您的公网 IP 地址: <strong>${data.ip}</strong></p>
+                        <p>局域网访问地址:</p>
+                        <p>前端应用: <a href="http://${data.ip}:8080" target="_blank">http://${data.ip}:8080</a></p>
+                        <p>API 服务器: <a href="http://${data.ip}:3000" target="_blank">http://${data.ip}:3000</a></p>
+                        <p class="note">注意: 这是您的公网 IP 地址，局域网内访问可能需要使用内网 IP 地址。</p>
+                    `;
+                })
+                .catch(error => {
+                    ipElement.textContent = '无法检测 IP 地址: ' + error.message;
+                });
+        }
+        
+        function startServer() {
+            window.open('cmd://start cmd /k "cd /d d:\\hello\\progress-app && npm run server"', '_blank');
+        }
+        
+        function startStaticServer() {
+            window.open('cmd://start cmd /k "cd /d d:\\hello\\progress-app && npm run serve:static"', '_blank');
+        }
+        
+        function stopServers() {
+            if (confirm('确定要停止所有 Node.js 服务器吗？')) {
+                window.open('cmd://start cmd /k "taskkill /F /IM node.exe && exit"', '_blank');
+            }
+        }
+        
+        // 自动检测 IP 地址
+        detectIP();
+    </script>
+</body>
+</html>
