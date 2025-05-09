@@ -38,13 +38,19 @@ cp db.json.example db.json
 ### 启动后端服务
 
 ```bash
-json-server --watch db.json
+npm run server:dev
 ```
 
 ### 启动前端开发服务器
 
 ```bash
 npm run serve
+```
+
+### 同时启动前端和后端（开发模式）
+
+```bash
+npm run dev
 ```
 
 ### 构建生产环境版本
@@ -58,6 +64,12 @@ npm run build
 ```bash
 npm run lint
 ```
+
+## 局域网部署
+
+本项目支持在局域网中部署，方便团队成员协作使用。详细的部署步骤请参考：
+
+[局域网部署指南](./LAN_DEPLOYMENT.md)
 
 ## 项目结构
 

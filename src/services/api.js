@@ -1,5 +1,6 @@
 // API 服务
-const API_URL = 'http://localhost:3000';
+import CONFIG from '../config';
+const API_URL = CONFIG.API_URL;
 
 /**
  * 获取所有项目

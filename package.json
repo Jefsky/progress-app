@@ -5,14 +5,20 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:lan": "vue-cli-service build --mode lan",
     "lint": "vue-cli-service lint",
-    "server": "npx json-server --watch db.json --port 3000",
-    "dev": "concurrently \"npm run serve\" \"npm run server\""
+    "server": "node server.js",
+    "server:dev": "npx json-server --watch db.json --port 3000",
+    "dev": "concurrently \"npm run serve\" \"npm run server:dev\"",
+    "start:lan": "concurrently \"npm run build:lan\" \"npm run server\"",
+    "serve:static": "node static-server.js",
+    "deploy:lan": "npm run build:lan && concurrently \"npm run server\" \"npm run serve:static\""
   },
   "dependencies": {
     "chart.js": "^4.4.9",
     "core-js": "^3.8.3",
     "element-plus": "^2.9.9",
+    "ip": "^2.0.1",
     "vue": "^3.2.13",
     "vue-router": "^4.5.1"
   },
@@ -25,7 +31,9 @@
     "concurrently": "^9.1.2",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "json-server": "^1.0.0-beta.3"
+    "express": "^5.1.0",
+    "json-server": "^1.0.0-beta.3",
+    "serve-static": "^1.16.2"
   },
   "eslintConfig": {
     "root": true,
