@@ -120,11 +120,27 @@
     
     <div class="card">
         <h2>快速启动</h2>
-        <p>使用以下按钮快速启动服务器：</p>
+        <p>使用以下命令启动服务器：</p>
         
-        <button class="btn btn-success" onclick="startServer()">启动 API 服务器</button>
-        <button class="btn btn-success" onclick="startStaticServer()">启动前端服务器</button>
-        <button class="btn btn-warning" onclick="stopServers()">停止所有服务器</button>
+        <div class="card" style="background-color: #f0f0f0; margin: 10px 0;">
+            <h3>启动 API 服务器</h3>
+            <pre style="background: #333; color: #fff; padding: 10px; border-radius: 4px; overflow: auto;">cd /d d:\hello\progress-app
+npm run server</pre>
+            <p>在命令提示符或 PowerShell 中运行上述命令</p>
+        </div>
+        
+        <div class="card" style="background-color: #f0f0f0; margin: 10px 0;">
+            <h3>启动前端服务器</h3>
+            <pre style="background: #333; color: #fff; padding: 10px; border-radius: 4px; overflow: auto;">cd /d d:\hello\progress-app
+npm run serve:static</pre>
+            <p>在命令提示符或 PowerShell 中运行上述命令</p>
+        </div>
+        
+        <div class="card" style="background-color: #f0f0f0; margin: 10px 0;">
+            <h3>停止所有服务器</h3>
+            <pre style="background: #333; color: #fff; padding: 10px; border-radius: 4px; overflow: auto;">taskkill /F /IM node.exe</pre>
+            <p>在命令提示符或 PowerShell 中运行上述命令</p>
+        </div>
     </div>
     
     <div class="card">
@@ -209,20 +225,6 @@
                 } else {
                     configCard.appendChild(configNote);
                 }
-            }
-        }
-        
-        function startServer() {
-            window.open('cmd://start cmd /k "cd /d d:\\hello\\progress-app && npm run server"', '_blank');
-        }
-        
-        function startStaticServer() {
-            window.open('cmd://start cmd /k "cd /d d:\\hello\\progress-app && npm run serve:static"', '_blank');
-        }
-        
-        function stopServers() {
-            if (confirm('确定要停止所有 Node.js 服务器吗？')) {
-                window.open('cmd://start cmd /k "taskkill /F /IM node.exe && exit"', '_blank');
             }
         }
         
