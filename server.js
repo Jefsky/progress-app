@@ -5,6 +5,21 @@ const middlewares = jsonServer.defaults();
 const port = 3000;
 const ip = require('ip');
 const localIp = ip.address();
+const fs = require('fs');
+const path = require('path');
+
+// 确保 db.json 文件存在
+const dbFile = path.join(__dirname, 'db.json');
+if (!fs.existsSync(dbFile)) {
+  const exampleFile = path.join(__dirname, 'db.json.example');
+  if (fs.existsSync(exampleFile)) {
+    fs.copyFileSync(exampleFile, dbFile);
+    console.log('已从 db.json.example 创建 db.json 文件');
+  } else {
+    fs.writeFileSync(dbFile, JSON.stringify({ projects: [] }, null, 2), 'utf8');
+    console.log('已创建空的 db.json 文件');
+  }
+}
 
 // 设置中间件
 server.use(middlewares);
@@ -20,6 +35,7 @@ server.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
   res.header('Access-Control-Allow-Methods', '*');
+  res.header('Content-Type', 'application/json; charset=utf-8');
   next();
 });
 
