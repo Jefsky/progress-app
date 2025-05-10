@@ -4,13 +4,13 @@
       <div class="header-content">
         <h1>项目进度管理系统</h1>
         <div class="action-buttons">
-          <el-button type="primary" @click="showAddProjectDialog">
+          <el-button type="primary" size="default" @click="showAddProjectDialog">
             <el-icon><Plus /></el-icon> 添加新项目
           </el-button>
-          <el-button @click="exportProjectData">
+          <el-button size="default" @click="exportProjectData">
             <el-icon><Download /></el-icon> 导出数据
           </el-button>
-          <el-button @click="importFileRef.click()">
+          <el-button size="default" @click="importFileRef.click()">
             <el-icon><Upload /></el-icon> 导入数据
           </el-button>
           <input
@@ -31,25 +31,53 @@
         class="project-card"
         @click="viewProjectDetail(project)"
       >
-        <div class="project-header">
-          <h2>{{ project.name }}</h2>
-          <el-tag :type="getStatusType(project.status)">{{ project.status }}</el-tag>
+        <div class="project-content">
+          <div class="project-header">
+            <h2>{{ project.name }}</h2>
+            <el-tag :type="getStatusType(project.status)" size="small">{{ project.status }}</el-tag>
+          </div>
+          <div class="project-progress">
+            <span class="progress-label">总体进度: {{ project.progress }}%</span>
+            <el-progress
+              :percentage="project.progress"
+              :status="getProgressStatus(project.progress)"
+            ></el-progress>
+          </div>
+          <div class="project-info">
+            <div class="info-grid">
+              <div class="info-item">
+                <el-icon><Calendar /></el-icon>
+                <span>开始日期: {{ formatDate(project.startDate) }}</span>
+              </div>
+              <div class="info-item">
+                <el-icon><Calendar /></el-icon>
+                <span>截止日期: {{ formatDate(project.endDate) }}</span>
+              </div>
+              <div class="info-item">
+                <el-icon><List /></el-icon>
+                <span>任务数: {{ project.tasks ? project.tasks.length : 0 }}</span>
+              </div>
+              <div class="info-item">
+                <el-icon><User /></el-icon>
+                <span>负责人: {{ project.manager || '未指定' }}</span>
+              </div>
+              <div class="info-item members-item" v-if="project.members && project.members.length > 0">
+                <el-icon><UserFilled /></el-icon>
+                <span class="members-text">成员: {{ project.members.join(', ') }}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="project-progress">
-          <span class="progress-label">总体进度: {{ project.progress }}%</span>
-          <el-progress
-            :percentage="project.progress"
-            :status="getProgressStatus(project.progress)"
-          ></el-progress>
-        </div>
-        <div class="project-info">
-          <p><el-icon><Calendar /></el-icon> 开始日期: {{ formatDate(project.startDate) }}</p>
-          <p><el-icon><Calendar /></el-icon> 截止日期: {{ formatDate(project.endDate) }}</p>
-          <p><el-icon><List /></el-icon> 任务数: {{ project.tasks ? project.tasks.length : 0 }}</p>
-          <p v-if="project.manager"><el-icon><User /></el-icon> 负责人: {{ project.manager }}</p>
-          <p v-if="project.members && project.members.length > 0">
-            <el-icon><UserFilled /></el-icon> 成员: {{ project.members.join(', ') }}
-          </p>
+        <div class="delete-button-container">
+          <el-button 
+            type="danger" 
+            size="small" 
+            circle
+            @click.stop="confirmDeleteProject(project)"
+            class="delete-button"
+          >
+            <el-icon><Delete /></el-icon>
+          </el-button>
         </div>
       </el-card>
     </div>
@@ -123,8 +151,8 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="addProjectDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="addProject">确定</el-button>
+          <el-button size="default" @click="addProjectDialogVisible = false">取消</el-button>
+          <el-button type="primary" size="default" @click="addProject">确定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -135,10 +163,21 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getProjects, createProject } from '../services/api';
+import { Calendar, List, User, UserFilled, Plus, Download, Upload, Delete } from '@element-plus/icons-vue';
+import { getProjects, createProject, deleteProject } from '../services/api';
 
 export default {
   name: 'ProjectList',
+  components: {
+    Calendar,
+    List,
+    User,
+    UserFilled,
+    Plus,
+    Download,
+    Upload,
+    Delete
+  },
   setup() {
     const router = useRouter();
     const importFileRef = ref(null);
@@ -263,6 +302,28 @@ export default {
     // 查看项目详情
     const viewProjectDetail = (project) => {
       router.push(`/project/${project.id}`);
+    };
+
+    // 删除项目
+    const confirmDeleteProject = (project) => {
+      ElMessageBox.confirm(`确认删除项目 "${project.name}" 吗？`, '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          try {
+            await deleteProject(project.id);
+            await loadProjects();
+            ElMessage.success('项目删除成功');
+          } catch (error) {
+            console.error('删除项目失败:', error);
+            ElMessage.error('删除项目失败');
+          }
+        })
+        .catch(() => {
+          // 取消删除
+        });
     };
 
     // 导出项目数据
@@ -398,6 +459,7 @@ export default {
       showAddProjectDialog,
       addProject,
       viewProjectDetail,
+      confirmDeleteProject,
       exportProjectData,
       importProjectData,
       formatDate,
@@ -432,6 +494,12 @@ export default {
 .project-card {
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  min-height: 380px;
+  overflow: hidden;
 }
 
 .project-card:hover {
@@ -439,60 +507,102 @@ export default {
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
+.project-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
 .project-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #EBEEF5;
+  padding-bottom: 15px;
 }
 
 .project-header h2 {
   margin: 0;
   font-size: 18px;
+  font-weight: bold;
+  color: #303133;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
 }
 
 .project-progress {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .progress-label {
   display: block;
   margin-bottom: 5px;
+  font-size: 14px;
+  color: #606266;
 }
 
 .project-info {
-  color: #666;
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
   font-size: 14px;
+  color: #606266;
+  line-height: 1.5;
+  padding: 5px 0;
 }
 
-.project-info p {
-  margin: 5px 0;
-  display: flex;
-  align-items: center;
+.info-item .el-icon {
+  margin-right: 8px;
+  margin-top: 3px;
+  color: #909399;
+  font-size: 16px;
 }
 
-.project-info .el-icon {
-  margin-right: 5px;
+.members-item {
+  grid-column: 1 / 3;
+  margin-top: 10px;
+  border-top: 1px dashed #EBEEF5;
+  padding-top: 10px;
 }
 
-.member-tag {
-  margin-right: 5px;
-  margin-bottom: 5px;
+.members-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  color: #606266;
 }
 
-.member-input {
-  width: 100px;
-  margin-right: 5px;
-  vertical-align: bottom;
+.delete-button-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.button-new-member {
-  margin-bottom: 5px;
+.project-card:hover .delete-button-container {
+  opacity: 1;
 }
 
-.action-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+.delete-button {
+  padding: 5px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 </style>

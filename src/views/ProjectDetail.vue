@@ -4,12 +4,13 @@
     <el-card class="page-header">
       <div class="header-content">
         <div class="header-left">
-          <el-button @click="goBack" icon="ArrowLeft">返回项目列表</el-button>
+          <el-button @click="goBack" icon="ArrowLeft" size="default">返回项目列表</el-button>
           <h1>{{ project?.name || '项目详情' }}</h1>
         </div>
         <div class="action-buttons">
-          <el-button type="primary" @click="showAddTaskDialog">添加任务</el-button>
-          <el-button type="warning" @click="showEditProjectDialog">编辑项目</el-button>
+          <el-button type="primary" size="default" @click="showAddTaskDialog">添加任务</el-button>
+          <el-button type="warning" size="default" @click="showEditProjectDialog">编辑项目</el-button>
+          <el-button type="danger" size="default" @click="confirmDeleteProject">删除项目</el-button>
         </div>
       </div>
       <div class="project-info">
@@ -156,22 +157,10 @@
         </el-table-column>
         <el-table-column label="操作" width="100" fixed="right">
           <template #default="scope">
-            <el-button 
-              size="small" 
-              @click="editTask(scope.row)"
-              type="primary" 
-              circle
-            >
-              <el-icon><Edit /></el-icon>
-            </el-button>
-            <el-button 
-              size="small" 
-              @click="deleteTask(scope.row)"
-              type="danger" 
-              circle
-            >
-              <el-icon><Delete /></el-icon>
-            </el-button>
+            <div class="task-actions" style="display: flex; justify-content: center; gap: 8px;">
+              <el-button size="small" @click="editTask(scope.row)">编辑</el-button>
+              <el-button type="danger" size="small" @click="deleteTask(scope.row)">删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -265,8 +254,8 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="addTaskDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="addTask">添加</el-button>
+        <el-button size="default" @click="addTaskDialogVisible = false">取消</el-button>
+        <el-button type="primary" size="default" @click="addTask">添加</el-button>
       </span>
     </template>
   </el-dialog>
@@ -359,8 +348,8 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="editTaskDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="updateTask">保存</el-button>
+        <el-button size="default" @click="editTaskDialogVisible = false">取消</el-button>
+        <el-button type="primary" size="default" @click="updateTask">保存</el-button>
       </span>
     </template>
   </el-dialog>
@@ -437,8 +426,8 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="editProjectDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="updateProject">保存</el-button>
+        <el-button size="default" @click="editProjectDialogVisible = false">取消</el-button>
+        <el-button type="primary" size="default" @click="updateProject">保存</el-button>
       </span>
     </template>
   </el-dialog>
@@ -450,7 +439,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import Chart from 'chart.js/auto';
-import { getProject, updateProject as apiUpdateProject } from '../services/api';
+import { getProject, updateProject as apiUpdateProject, deleteProject as apiDeleteProject } from '../services/api';
 
 export default {
   name: 'ProjectDetail',
@@ -846,6 +835,40 @@ export default {
       }
     };
 
+    // 删除项目
+    const deleteProject = async () => {
+      ElMessageBox.confirm(
+        '确定要删除这个项目吗？此操作不可恢复。',
+        '删除确认',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(async () => {
+        try {
+          // 删除项目
+          await apiDeleteProject(projectId.value);
+          
+          // 提示成功
+          ElMessage.success('项目删除成功');
+          
+          // 返回项目列表
+          router.push('/');
+        } catch (error) {
+          console.error('删除项目失败:', error);
+          ElMessage.error('删除项目失败');
+        }
+      }).catch(() => {
+        // 用户取消删除
+      });
+    };
+
+    // 确认删除项目
+    const confirmDeleteProject = () => {
+      deleteProject();
+    };
+
     // 更新项目进度
     const updateProjectProgress = () => {
       if (project.value && project.value.tasks && project.value.tasks.length > 0) {
@@ -1095,7 +1118,8 @@ export default {
       getPriorityType,
       getProgressLabel,
       getProgressColorClass,
-      getProgressLabelClass
+      getProgressLabelClass,
+      confirmDeleteProject
     };
   }
 };
@@ -1311,6 +1335,12 @@ export default {
 .task-progress-text {
   font-size: 13px;
   font-weight: 500;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
